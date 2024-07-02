@@ -1,5 +1,6 @@
 use crate::game_parameters::*;
 use crate::player::*;
+use bevy::input::keyboard::KeyCode;
 use bevy::prelude::*;
 
 pub fn create_app(game_parameters: GameParameters) -> App {
@@ -8,7 +9,7 @@ pub fn create_app(game_parameters: GameParameters) -> App {
         add_player_from_parameters(commands, &game_parameters);
     };
     app.add_systems(Startup, add_player_fn);
-    app.add_systems(Update, move_player);
+    app.add_systems(Update, (move_player, respond_to_keyboard));
 
     // Do not do update, as this will disallow to do more steps
     // app.update(); //Don't!
@@ -24,6 +25,23 @@ fn move_player(mut query: Query<(&mut Transform, &Player)>) {
     let (mut player_sprite, player) = query.single_mut();
     player_sprite.translation.x += player.velocity.x;
     player_sprite.translation.y += player.velocity.y;
+}
+
+fn respond_to_keyboard(
+    mut query: Query<&mut Player>,
+    maybe_input: Option<Res<ButtonInput<KeyCode>>>,
+) {
+    if maybe_input.is_none() {
+        return;
+    }
+    let input = maybe_input.unwrap();
+    let mut player = query.single_mut();
+    if input.just_pressed(KeyCode::ArrowRight) {
+        player.velocity.x += 1.0;
+    }
+    if input.just_pressed(KeyCode::ArrowLeft) {
+        player.velocity.x -= 1.0;
+    }
 }
 
 fn add_player_from_parameters(mut commands: Commands, parameters: &GameParameters) {
@@ -99,7 +117,7 @@ mod tests {
     }
 
     #[test]
-    fn test_setup_player_adds_a_player() {
+    fn test_add_player_adds_a_player() {
         let mut app = App::new();
         assert_eq!(count_n_players(&app), 0);
         app.add_systems(Startup, add_player);
@@ -152,6 +170,22 @@ mod tests {
             get_player_coordinat(&mut app)
         );
     }
+
+    /*
+    THIS TEST NOW FAILS
+    #[test]
+    fn test_player_responds_to_right_arrow_key() {
+        use create_default_game_parameters as create_params;
+        let params = create_params();
+        let mut app = create_app(params);
+        // Press the right arrow button
+        app.update();
+        assert_ne!(
+            create_params().initial_player_position,
+            get_player_coordinat(&mut app)
+        );
+    }
+    */
 
     #[test]
     fn test_player_moves_in_a_line() {

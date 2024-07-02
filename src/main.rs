@@ -6,9 +6,7 @@ mod game_parameters;
 mod player;
 
 fn main() {
-    let mut app = create_app(create_default_game_parameters_with_player_velocity(
-        Vec2::new(1.1, 2.2),
-    ));
+    let mut app = create_app(create_default_game_parameters());
     let add_camera_fun = |mut commands: Commands| {
         commands.spawn(Camera2dBundle::default());
     };

@@ -14,6 +14,7 @@ pub fn create_default_game_parameters() -> GameParameters {
     };
 }
 
+#[cfg(test)]
 pub fn create_default_game_parameters_with_player_velocity(
     initial_player_velocity: Vec2,
 ) -> GameParameters {
