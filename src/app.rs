@@ -179,13 +179,14 @@ mod tests {
         let params = create_params();
         let mut app = create_app(params);
         // Press the right arrow button
-        // <--- This is what I want to know
+        app.world
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::KeyA);
         app.update();
-        // FAILS!
-        //assert_ne!(
-        //    create_params().initial_player_position,
-        //    get_player_coordinat(&mut app)
-        //);
+        assert_ne!(
+            create_params().initial_player_position,
+            get_player_coordinat(&mut app)
+        );
     }
 
     #[test]
