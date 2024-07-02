@@ -6,7 +6,7 @@ use bevy::prelude::*;
 
 pub fn create_app(game_parameters: GameParameters) -> App {
     let mut app = App::new();
-    app.add_plugins(InputPlugin);
+    app.add_plugins(InputPlugin); // Don't
     let add_player_fn = move |/* no mut? */ commands: Commands| {
         add_player_from_parameters(commands, &game_parameters);
     };
@@ -180,12 +180,14 @@ mod tests {
         use create_default_game_parameters as create_params;
         let params = create_params();
         let mut app = create_app(params);
+        app.update();
         // Press the right arrow button
-        //app.init_resource::<ButtonInput<KeyCode>>();
-        //app.update();
         app.world
             .resource_mut::<ButtonInput<KeyCode>>()
-            .press(KeyCode::KeyA);
+            .press(KeyCode::ArrowRight);
+        //app.world
+        //    .resource_mut::<ButtonInput<KeyCode>>()
+        //    .just_pressed(KeyCode::ArrowRight);
         app.update();
         assert_ne!(
             create_params().initial_player_position,
