@@ -52,4 +52,3 @@ Filename                                  |Descriptions
 ## References
 
 * [Bevy setup](https://bevyengine.org/learn/quick-start/getting-started/setup/)
-
