@@ -1,10 +1,12 @@
 use crate::game_parameters::*;
 use crate::player::*;
 use bevy::input::keyboard::KeyCode;
+use bevy::input::InputPlugin;
 use bevy::prelude::*;
 
 pub fn create_app(game_parameters: GameParameters) -> App {
     let mut app = App::new();
+    app.add_plugins(InputPlugin);
     let add_player_fn = move |/* no mut? */ commands: Commands| {
         add_player_from_parameters(commands, &game_parameters);
     };
@@ -179,6 +181,8 @@ mod tests {
         let params = create_params();
         let mut app = create_app(params);
         // Press the right arrow button
+        //app.init_resource::<ButtonInput<KeyCode>>();
+        //app.update();
         app.world
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::KeyA);
