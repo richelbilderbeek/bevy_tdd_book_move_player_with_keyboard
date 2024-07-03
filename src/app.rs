@@ -216,6 +216,9 @@ mod tests {
         app.world
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowRight);
+
+        app.update();
+        app.update();
         app.update();
 
         // At least the velocity should change
