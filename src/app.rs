@@ -6,7 +6,13 @@ use bevy::prelude::*;
 
 pub fn create_app(game_parameters: GameParameters) -> App {
     let mut app = App::new();
-    app.add_plugins(InputPlugin); // Don't
+
+    // Only add this plugin in debugging.
+    // The main app will assume it to be absent
+    if cfg!(debugging) {
+        app.add_plugins(InputPlugin);
+    }
+
     let add_player_fn = move |/* no mut? */ commands: Commands| {
         add_player_from_parameters(commands, &game_parameters);
     };
@@ -100,7 +106,7 @@ fn print_all_components_names(app: &App) {
 
 #[cfg(test)]
 mod tests {
-    use bevy::input::keyboard::KeyboardInput;
+    //use bevy::input::keyboard::KeyboardInput;
 
     use super::*;
 
@@ -176,18 +182,22 @@ mod tests {
     }
 
     #[test]
+    fn test_can_detect_plugins() {
+        let app = create_app(create_default_game_parameters());
+        assert!(app.is_plugin_added::<InputPlugin>());
+        assert_eq!(false, app.is_plugin_added::<WindowPlugin>());
+    }
+
+    #[test]
     fn test_player_responds_to_right_arrow_key() {
         use create_default_game_parameters as create_params;
         let params = create_params();
         let mut app = create_app(params);
-        app.update();
+        assert!(app.is_plugin_added::<InputPlugin>());
         // Press the right arrow button
         app.world
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowRight);
-        //app.world
-        //    .resource_mut::<ButtonInput<KeyCode>>()
-        //    .just_pressed(KeyCode::ArrowRight);
         app.update();
         assert_ne!(
             create_params().initial_player_position,
