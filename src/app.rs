@@ -7,9 +7,9 @@ use bevy::prelude::*;
 pub fn create_app(game_parameters: GameParameters) -> App {
     let mut app = App::new();
 
-    // Only add this plugin in debugging.
+    // Only add this plugin in testing.
     // The main app will assume it to be absent
-    if cfg!(debugging) {
+    if cfg!(test) {
         app.add_plugins(InputPlugin);
     }
 
