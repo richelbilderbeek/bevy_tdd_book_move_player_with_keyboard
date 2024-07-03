@@ -17,7 +17,9 @@ pub fn create_app(game_parameters: GameParameters) -> App {
         add_player_from_parameters(commands, &game_parameters);
     };
     app.add_systems(Startup, add_player_fn);
-    app.add_systems(Update, (move_player, respond_to_keyboard));
+
+    // Shane Celis' suggestion to chain
+    app.add_systems(Update, (respond_to_keyboard, move_player).chain());
 
     // Do not do update, as this will disallow to do more steps
     // app.update(); //Don't!
@@ -217,6 +219,7 @@ mod tests {
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowRight);
 
+        // Shane Celis' suggestion:
         app.update();
         app.update();
         app.update();
