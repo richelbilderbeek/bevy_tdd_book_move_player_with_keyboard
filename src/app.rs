@@ -195,9 +195,15 @@ mod tests {
         let mut app = create_app(params);
         assert!(app.is_plugin_added::<InputPlugin>());
         // Press the right arrow button
+        //From https://github.com/not-elm/bevy-input-sequence/blob/master/tests/simulated.rs#L650
+        use bevy_input_sequence::Input;
         app.world
-            .resource_mut::<ButtonInput<KeyCode>>()
+            .resource_mut::<Input<KeyCode>>()
             .press(KeyCode::ArrowRight);
+        //Periwinkle suggestion:
+        //app.world
+        //    .resource_mut::<ButtonInput<KeyCode>>()
+        //    .press(KeyCode::ArrowRight);
         app.update();
         assert_ne!(
             create_params().initial_player_position,
