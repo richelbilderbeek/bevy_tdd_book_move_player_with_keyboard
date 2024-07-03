@@ -98,6 +98,13 @@ fn get_player_scale(app: &mut App) -> Vec3 {
 }
 
 #[cfg(test)]
+fn get_player_velocity(app: &mut App) -> Vec2 {
+    let mut query = app.world.query::<&Player>();
+    let player = query.single(&app.world);
+    return player.velocity;
+}
+
+#[cfg(test)]
 fn print_all_components_names(app: &App) {
     for c in app.world.components().iter() {
         println!("{}", c.name())
@@ -194,12 +201,26 @@ mod tests {
         let params = create_params();
         let mut app = create_app(params);
         assert!(app.is_plugin_added::<InputPlugin>());
+        app.update();
+
+        // No velocity yet
+        assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
+        // Not moved yet
+        assert_eq!(
+            create_params().initial_player_position,
+            get_player_coordinat(&mut app)
+        );
+
         // Press the right arrow button
         // Periwinkle suggestion:
         app.world
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowRight);
         app.update();
+
+        // At least the velocity should change
+        assert_ne!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
+        // Maybe the velocity changes
         assert_ne!(
             create_params().initial_player_position,
             get_player_coordinat(&mut app)
