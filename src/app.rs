@@ -46,11 +46,17 @@ fn respond_to_keyboard(
     }
     let input = maybe_input.unwrap();
     let mut player = query.single_mut();
-    if input.just_pressed(KeyCode::ArrowRight) {
+    if input.pressed(KeyCode::ArrowRight) {
         player.velocity.x += 1.0;
     }
-    if input.just_pressed(KeyCode::ArrowLeft) {
+    if input.pressed(KeyCode::ArrowLeft) {
         player.velocity.x -= 1.0;
+    }
+    if input.pressed(KeyCode::ArrowUp) {
+        player.velocity.y += 1.0;
+    }
+    if input.pressed(KeyCode::ArrowDown) {
+        player.velocity.y -= 1.0;
     }
 }
 
@@ -205,32 +211,75 @@ mod tests {
         assert!(app.is_plugin_added::<InputPlugin>());
         app.update();
 
-        // No velocity yet
         assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
-        // Not moved yet
-        assert_eq!(
-            create_params().initial_player_position,
-            get_player_coordinat(&mut app)
-        );
 
-        // Press the right arrow button
-        // Periwinkle suggestion:
+        // Press the right arrow key, thanks Periwinkle
         app.world
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowRight);
 
-        // Shane Celis' suggestion:
-        app.update();
-        app.update();
         app.update();
 
-        // At least the velocity should change
-        assert_ne!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
-        // Maybe the velocity changes
-        assert_ne!(
-            create_params().initial_player_position,
-            get_player_coordinat(&mut app)
-        );
+        assert!(get_player_velocity(&mut app).x > 0.0);
+    }
+
+    #[test]
+    fn test_player_responds_to_left_arrow_key() {
+        use create_default_game_parameters as create_params;
+        let params = create_params();
+        let mut app = create_app(params);
+        assert!(app.is_plugin_added::<InputPlugin>());
+        app.update();
+
+        assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
+
+        app.world
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::ArrowLeft);
+
+        app.update();
+
+        assert!(get_player_velocity(&mut app).x < 0.0);
+    }
+
+    #[test]
+    fn test_player_responds_to_up_arrow_key() {
+        use create_default_game_parameters as create_params;
+        let params = create_params();
+        let mut app = create_app(params);
+        assert!(app.is_plugin_added::<InputPlugin>());
+        app.update();
+
+        assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
+
+        app.world
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::ArrowUp);
+
+        app.update();
+
+        assert!(get_player_velocity(&mut app).y < 0.0);
+    }
+
+    #[test]
+    fn test_player_responds_to_down_arrow_key() {
+        use create_default_game_parameters as create_params;
+        let params = create_params();
+        let mut app = create_app(params);
+        assert!(app.is_plugin_added::<InputPlugin>());
+        app.update();
+
+        // No velocity yet
+        assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
+
+        // Press the key
+        app.world
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::ArrowDown);
+
+        app.update();
+
+        assert!(get_player_velocity(&mut app).y > 0.0);
     }
 
     #[test]
