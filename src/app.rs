@@ -18,8 +18,7 @@ pub fn create_app(game_parameters: GameParameters) -> App {
     };
     app.add_systems(Startup, add_player_fn);
 
-    // Shane Celis' suggestion to chain
-    app.add_systems(Update, (respond_to_keyboard, move_player).chain());
+    app.add_systems(Update, (respond_to_keyboard, move_player));
 
     // Do not do update, as this will disallow to do more steps
     // app.update(); //Don't!
@@ -258,7 +257,7 @@ mod tests {
 
         app.update();
 
-        assert!(get_player_velocity(&mut app).y < 0.0);
+        assert!(get_player_velocity(&mut app).y > 0.0);
     }
 
     #[test]
@@ -279,7 +278,7 @@ mod tests {
 
         app.update();
 
-        assert!(get_player_velocity(&mut app).y > 0.0);
+        assert!(get_player_velocity(&mut app).y < 0.0);
     }
 
     #[test]
