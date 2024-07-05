@@ -23,7 +23,7 @@ pub fn create_app(game_parameters: GameParameters) -> App {
 
     // Do not do update, as this will disallow to do more steps
     // app.update(); //Don't!
-    return app;
+    app
 }
 
 #[cfg(test)]
@@ -85,31 +85,31 @@ fn count_n_players(app: &App) -> usize {
             n += 1;
         }
     }
-    return n;
+    n
 }
 
 #[cfg(test)]
 fn get_player_coordinat(app: &mut App) -> Vec3 {
     // Do 'app.update()' before calling this function,
     // else this assert goes off.
-    assert_eq!(count_n_players(&app), 1);
+    assert_eq!(count_n_players(app), 1);
     let mut query = app.world.query::<(&Transform, &Player)>();
     let (transform, _) = query.single(&app.world);
-    return transform.translation;
+    transform.translation
 }
 
 #[cfg(test)]
 fn get_player_scale(app: &mut App) -> Vec3 {
     let mut query = app.world.query::<(&Transform, &Player)>();
     let (transform, _) = query.single(&app.world);
-    return transform.scale;
+    transform.scale
 }
 
 #[cfg(test)]
 fn get_player_velocity(app: &mut App) -> Vec2 {
     let mut query = app.world.query::<&Player>();
     let player = query.single(&app.world);
-    return player.velocity;
+    player.velocity
 }
 
 #[cfg(test)]
@@ -200,7 +200,7 @@ mod tests {
     fn test_can_detect_plugins() {
         let app = create_app(create_default_game_parameters());
         assert!(app.is_plugin_added::<InputPlugin>());
-        assert_eq!(false, app.is_plugin_added::<WindowPlugin>());
+        assert!(!app.is_plugin_added::<WindowPlugin>());
     }
 
     #[test]
