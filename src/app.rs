@@ -93,21 +93,21 @@ fn get_player_coordinat(app: &mut App) -> Vec3 {
     // else this assert goes off.
     assert_eq!(count_n_players(app), 1);
     let mut query = app.world_mut().query::<(&Transform, &Player)>();
-    let (transform, _) = query.single(&app.world());
+    let (transform, _) = query.single(app.world());
     transform.translation
 }
 
 #[cfg(test)]
 fn get_player_scale(app: &mut App) -> Vec3 {
     let mut query = app.world_mut().query::<(&Transform, &Player)>();
-    let (transform, _) = query.single(&app.world());
+    let (transform, _) = query.single(app.world());
     transform.scale
 }
 
 #[cfg(test)]
 fn get_player_velocity(app: &mut App) -> Vec2 {
     let mut query = app.world_mut().query::<&Player>();
-    let player = query.single(&app.world());
+    let player = query.single(app.world());
     player.velocity
 }
 
