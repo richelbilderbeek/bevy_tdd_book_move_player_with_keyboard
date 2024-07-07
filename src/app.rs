@@ -206,7 +206,7 @@ mod tests {
         assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
 
         // Press the right arrow key, thanks Periwinkle
-        app.world
+        app.world_mut()
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowRight);
 
@@ -225,7 +225,7 @@ mod tests {
 
         assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
 
-        app.world
+        app.world_mut()
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowLeft);
 
@@ -265,7 +265,7 @@ mod tests {
         assert_eq!(Vec2::new(0.0, 0.0), get_player_velocity(&mut app));
 
         // Press the key
-        app.world
+        app.world_mut()
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::ArrowDown);
 
