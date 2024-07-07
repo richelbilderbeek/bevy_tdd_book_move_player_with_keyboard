@@ -78,7 +78,7 @@ fn add_player_from_parameters(mut commands: Commands, parameters: &GameParameter
 #[cfg(test)]
 fn count_n_players(app: &App) -> usize {
     let mut n = 0;
-    for c in app.world.components().iter() {
+    for c in app.world().components().iter() {
         // The complete name will be '[crate_name]::Player'
         if c.name().contains("Player") {
             n += 1;
@@ -92,30 +92,23 @@ fn get_player_coordinat(app: &mut App) -> Vec3 {
     // Do 'app.update()' before calling this function,
     // else this assert goes off.
     assert_eq!(count_n_players(app), 1);
-    let mut query = app.world.query::<(&Transform, &Player)>();
-    let (transform, _) = query.single(&app.world);
+    let mut query = app.world_mut().query::<(&Transform, &Player)>();
+    let (transform, _) = query.single(&app.world());
     transform.translation
 }
 
 #[cfg(test)]
 fn get_player_scale(app: &mut App) -> Vec3 {
-    let mut query = app.world.query::<(&Transform, &Player)>();
-    let (transform, _) = query.single(&app.world);
+    let mut query = app.world_mut().query::<(&Transform, &Player)>();
+    let (transform, _) = query.single(&app.world());
     transform.scale
 }
 
 #[cfg(test)]
 fn get_player_velocity(app: &mut App) -> Vec2 {
-    let mut query = app.world.query::<&Player>();
-    let player = query.single(&app.world);
+    let mut query = app.world_mut().query::<&Player>();
+    let player = query.single(&app.world());
     player.velocity
-}
-
-#[cfg(test)]
-fn print_all_components_names(app: &App) {
-    for c in app.world.components().iter() {
-        println!("{}", c.name())
-    }
 }
 
 #[cfg(test)]
@@ -291,12 +284,5 @@ mod tests {
         let expected_pos =
             create_params().initial_player_position + Vec3::new(velocity.x, velocity.y, 0.0);
         assert_eq!(expected_pos, get_player_coordinat(&mut app));
-    }
-
-    #[test]
-    fn test_print_all_components_names() {
-        let mut app = create_app(create_default_game_parameters());
-        app.update();
-        print_all_components_names(&app);
     }
 }
