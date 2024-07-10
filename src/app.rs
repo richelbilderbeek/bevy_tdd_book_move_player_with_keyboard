@@ -35,12 +35,8 @@ fn add_player(mut commands: Commands) {
 
 fn respond_to_keyboard(
     mut query: Query<(&mut Transform, &Player)>,
-    maybe_input: Option<Res<ButtonInput<KeyCode>>>,
+    input: Res<ButtonInput<KeyCode>>,
 ) {
-    if maybe_input.is_none() {
-        return;
-    }
-    let input = maybe_input.unwrap();
     let (mut transform, _) = query.single_mut();
     use bevy::input::keyboard::KeyCode;
     if input.pressed(KeyCode::ArrowRight) {
